@@ -1,0 +1,36 @@
+
+# Ignore specific file extensions anywhere in the tree
+
+*.chw
+*.dbp
+*.dll
+*.exe
+*.exe.config
+*.g.resources
+*.in
+*.log
+*.nupkg
+*.pdb
+*.resources
+*.suo
+*.user
+
+# Ignore specific folders anywhere in the tree
+
+**/.intellisense
+**/.vs
+**/bin
+**/obj
+
+# Ignore specific folders
+
+/Documentation/WebHelp
+DotNetCore/distribution
+OutputFiles
+/packages
+
+# Ignore specific files
+
+/UpgradeLog.htm
+
+/ftp.tmp
