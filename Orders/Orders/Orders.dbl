@@ -22,10 +22,22 @@ main Orders
 
     record
         detail,         strDetail
+        group now, a
+            group date, d
+                year,   d4
+                month,  d2
+                day,    d2
+            endgroup
+            group time, d
+                hour,   d2
+                minute, d2
+                second, d2
+            endgroup
+        endgroup
     endrecord
 
 proc
-
+    now = %datetime
 
 
     stop
