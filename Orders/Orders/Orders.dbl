@@ -37,9 +37,33 @@ main Orders
     endrecord
 
 proc
-    now = %datetime
 
+    call startup
+    call process
+    call shutdown
 
     stop
+
+;----------------------------------------------------------------
+; Code to start and initialize the program environment
+;
+startup,
+    now = %datetime
+
+    return
+
+;----------------------------------------------------------------
+; Code to clean up and shut down the environment
+;
+shutdown,
+
+    return
+
+;----------------------------------------------------------------
+; Code to perform main processing
+;
+process,
+
+    return
 
 endmain
