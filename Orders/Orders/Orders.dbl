@@ -4,6 +4,8 @@
 ;;; </summary>
 main Orders
 
+    .include "WND:windows.def"
+
     record header
         oh_number,      d6      ;Order number
         oh_customer,    a8      ;Customer account code
@@ -34,6 +36,11 @@ main Orders
                 second, d2
             endgroup
         endgroup
+
+        tt,             i4
+        achr,           a1
+        msgwin,         i4
+
     endrecord
 
 proc
@@ -50,6 +57,13 @@ proc
 startup,
     now = %datetime
 
+    open(tt=0,i,"tt:")
+    xcall flags(7004020,1)
+    display(tt,$SCR_CLR(SCREEN))
+
+    xcall w_init(1,tt,5)
+    xcall w_caption(WC_SET,"My First Synergy Application")
+
     return
 
 ;----------------------------------------------------------------
@@ -57,12 +71,39 @@ startup,
 ;
 shutdown,
 
+    xcall w_exit
+
+    display(tt,$SCR_CLR(SCREEN))
+    close tt
+
     return
 
 ;----------------------------------------------------------------
 ; Code to perform main processing
 ;
 process,
+
+    ;Create a new window.
+    xcall w_proc(WP_CREATE,msgwin,"MESSAGE",3,30)
+
+    ;Give the window a title of “Message” and specify that the title is displayed
+    ;in the center of the top border.
+    xcall w_brdr(msgwin,
+    &   WB_ON,
+    &   WB_TPOS,WBT_TOP,WBT_CENTER,
+    &   WB_TITLE,"Message")
+
+    ;Display some text into the window.
+    xcall w_disp(msgwin,WD_POS,2,2,"Welcome to my Synergy app!")
+
+    ;Place the window onto the screen.
+    xcall w_proc(WP_PLACE,msgwin,10,25)
+
+    ;Allow the user to acknowledge the message by waiting for a key to be pressed.
+    xcall w_disp(msgwin,WD_ACCEPT,achr)
+
+    ;Delete the window.
+    xcall w_proc(WP_DELETE,msgwin)
 
     return
 
