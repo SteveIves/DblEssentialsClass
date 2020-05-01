@@ -14,6 +14,8 @@
     <EnableCommonProperties>True</EnableCommonProperties>
     <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
     <RootNamespace>Orders</RootNamespace>
+    <ProjEnvVars>
+    </ProjEnvVars>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -23,6 +25,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|linux32' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <PlatformTarget>linux32</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Debug</DebugOptimize>
+    <OutputPath>bin\linux32\Debug\</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
@@ -30,6 +40,14 @@
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|linux64' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <PlatformTarget>linux64</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Debug</DebugOptimize>
+    <OutputPath>bin\linux64\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -39,6 +57,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|linux32' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <PlatformTarget>linux32</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Optimize</DebugOptimize>
+    <OutputPath>bin\linux32\Release\</OutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
@@ -47,8 +73,24 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|linux64' ">
+    <IncludeDebugInformation>False</IncludeDebugInformation>
+    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <PlatformTarget>linux64</PlatformTarget>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugOptimize>Optimize</DebugOptimize>
+    <OutputPath>bin\linux64\Release\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Orders.dbl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="detail.def">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="header.def">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>

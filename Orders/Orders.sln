@@ -7,16 +7,28 @@ Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Orders", "Orders\Orders.syn
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|linux32 = Debug|linux32
+		Debug|linux64 = Debug|linux64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|linux32 = Release|linux32
+		Release|linux64 = Release|linux64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|linux32.ActiveCfg = Debug|linux32
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|linux32.Build.0 = Debug|linux32
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|linux64.ActiveCfg = Debug|linux64
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|linux64.Build.0 = Debug|linux64
 		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|x64.ActiveCfg = Debug|x64
 		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|x64.Build.0 = Debug|x64
 		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|x86.ActiveCfg = Debug|x86
 		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Debug|x86.Build.0 = Debug|x86
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Release|linux32.ActiveCfg = Release|linux32
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Release|linux32.Build.0 = Release|linux32
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Release|linux64.ActiveCfg = Release|linux64
+		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Release|linux64.Build.0 = Release|linux64
 		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Release|x64.ActiveCfg = Release|x64
 		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Release|x64.Build.0 = Release|x64
 		{58660E0D-8965-45DD-A7EA-CAC0E0572198}.Release|x86.ActiveCfg = Release|x86
