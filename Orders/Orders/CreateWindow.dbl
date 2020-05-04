@@ -48,7 +48,7 @@ proc
     xcall w_brdr(aWndid,WB_ON)
 
     if (^passed(aTitle))
-        xcall w_brdr(aWndid,WB_TPOS,WBT_TOP,WBT_CENTER,WB_TITLE,"Message")
+        xcall w_brdr(aWndid,WB_TPOS,WBT_TOP,WBT_CENTER,WB_TITLE,aTitle)
 
     xreturn
 

@@ -1,0 +1,13 @@
+
+subroutine DELETE_WINDOW
+    required in aWndid, i
+    endparams
+
+    .include "WND:windows.def"
+
+proc
+    xcall w_proc(WP_DELETE,aWndid)
+
+    xreturn
+
+endsubroutine

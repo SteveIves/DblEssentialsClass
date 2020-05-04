@@ -83,8 +83,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CreateWindow.dbl" />
+    <Compile Include="DeleteWindow.dbl" />
     <Compile Include="DisplayMessage.dbl" />
+    <Compile Include="DisplayText.dbl" />
     <Compile Include="Orders.dbl" />
+    <Compile Include="WaitKey.dbl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="detail.def">

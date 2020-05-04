@@ -1,0 +1,23 @@
+
+;;; <summary>
+;;; Display passed text on a specific window at a specified position.
+;;; </summary>
+;;; <param name="aWndid">ID of the window to display text on.</param>
+;;; <param name="aRow">Row position in the window to display text at.</param>
+;;; <param name="aCol">Column position in the window to display text at.</param>
+;;; <param name="aText">The text to be displayed.</param>
+subroutine DISPLAY_TEXT
+    required in aWndid, i
+    required in aRow,   n
+    required in aCol,   n
+    required in aText,  a
+    endparams
+
+    .include "WND:windows.def"
+
+proc
+    xcall w_disp(aWndid,WD_POS,aRow,aCol,aText)
+
+    xreturn
+
+endsubroutine

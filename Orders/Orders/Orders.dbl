@@ -24,6 +24,7 @@ main Orders
 
         tt,             i4
         achr,           a1
+        mnuWinId,       i4
 
     endrecord
 
@@ -42,7 +43,7 @@ startup,
     now = %datetime
 
     open(tt=0,i,"tt:")
-    xcall flags(7004020,1)
+    xcall flags(87004020,1)
 
     xcall w_init(1,tt,5)
 
@@ -73,7 +74,34 @@ shutdown,
 ;
 process,
 
-    xcall DISPLAY_MESSAGE("Hello world!")
+    xcall CREATE_WINDOW(mnuWinId,"MENU",9,40,,,"Order Processing Menu")
+
+    xcall DISPLAY_TEXT(mnuWinId,2,2,"[A]  Add a new order")
+    xcall DISPLAY_TEXT(mnuWinId,4,2,"[V]  View an order")
+    xcall DISPLAY_TEXT(mnuWinId,6,2,"[E]  Exit")
+    xcall DISPLAY_TEXT(mnuWinId,8,2,"Select an option: ")
+
+    repeat
+    begin
+        xcall WAIT_KEY(mnuWinId,8,20,achr)
+
+        ;;Uppercase the key pressed
+        upcase achr
+
+        using achr select
+        ("A"),
+            xcall DISPLAY_MESSAGE("You selected option A")
+        ("V"),
+            xcall DISPLAY_MESSAGE("You selected option V")
+        ("E"),
+            exitloop
+        (),
+            xcall DISPLAY_MESSAGE("You selected an invalid option!")
+        endusing
+
+    end
+
+    xcall DELETE_WINDOW(mnuWinId)
 
     return
 

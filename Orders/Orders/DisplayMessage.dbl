@@ -7,14 +7,11 @@ subroutine DISPLAY_MESSAGE
     required in aMessage, a
     endparams
 
-    .include "WND:windows.def"
-
     record
         width,  i4
         col,    i4
         msgwin, i4
         achr,   a1
-        tmpchr, a1
     endrecord
 
 proc
@@ -25,15 +22,14 @@ proc
     ;and specify that the title is displayed in the center of the top border.
     xcall CREATE_WINDOW(msgwin,"MESSAGE",3,width,10,col,"Message")
 
-    ;Display some text into the window and allow the user to acknowledge the message by waiting for a key to be pressed..
-    xcall w_disp(msgwin,WD_POS,2,2,aMessage,WD_ACCEPT,achr)
+    ;Display some text into the window 
+    xcall DISPLAY_TEXT(msgwin,2,2,aMessage)
 
-    ;Ensure there are no additional characters in the keyboard buffer.
-    while %ttsts
-        xcall w_disp(msgwin,WD_ACCEPT,tmpchr)
+    ;Allow the user to acknowledge the message by waiting for a key to be pressed.
+    xcall WAIT_KEY(msgwin,2,width,achr)
 
     ;Delete the window.
-    xcall w_proc(WP_DELETE,msgwin)
+    xcall DELETE_WINDOW(msgwin)
 
     xreturn
 
