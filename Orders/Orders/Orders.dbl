@@ -25,6 +25,7 @@ main Orders
         tt,             i4
         achr,           a1
         mnuWinId,       i4
+        orderWinId,     i4
 
     endrecord
 
@@ -74,7 +75,7 @@ shutdown,
 ;
 process,
 
-    xcall CREATE_WINDOW(mnuWinId,"MENU",9,40,,,"Order Processing Menu")
+    xcall CREATE_WINDOW(mnuWinId,"MENU",9,30,,,"Order Processing Menu")
 
     xcall DISPLAY_TEXT(mnuWinId,2,2,"[A]  Add a new order")
     xcall DISPLAY_TEXT(mnuWinId,4,2,"[V]  View an order")
@@ -90,7 +91,7 @@ process,
 
         using achr select
         ("A"),
-            xcall DISPLAY_MESSAGE("You selected option A")
+            call order_header
         ("V"),
             xcall DISPLAY_MESSAGE("You selected option V")
         ("E"),
@@ -102,6 +103,39 @@ process,
     end
 
     xcall DELETE_WINDOW(mnuWinId)
+
+    return
+
+;----------------------------------------------------------------
+; Code to create a new order
+;
+order_header,
+
+    xcall CREATE_WINDOW(orderWinId,"ORDER",8,55,07,12,"Order Details")
+
+    xcall DISPLAY_TEXT(orderWinId,2,2,"Order number")
+    xcall DISPLAY_TEXT(orderWinId,4,2,"Customer account")
+    xcall DISPLAY_TEXT(orderWinId,5,2,"Date of order")
+    xcall DISPLAY_TEXT(orderWinId,6,2,"Placed by")
+    xcall DISPLAY_TEXT(orderWinId,7,2,"Sales rep number")
+
+    repeat
+    begin
+        xcall input(orderWinId,2,20,header.oh_number)
+
+        ;Did the user just hit enter (to exit)?
+        if (!header.oh_number)
+            exitloop
+
+        xcall input(orderWinId,4,20,header.oh_customer,true)
+        xcall input(orderWinId,5,20,header.oh_date,,,true)
+        xcall input(orderWinId,6,20,header.oh_contact,true)
+        xcall input(orderWinId,7,20,header.oh_salesrep,true)
+
+        xcall CLEAR_BOX(orderWinId,4,20,7,55)
+    end
+
+    xcall DELETE_WINDOW(orderWinId)
 
     return
 

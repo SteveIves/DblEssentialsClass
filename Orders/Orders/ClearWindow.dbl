@@ -1,0 +1,14 @@
+
+subroutine CLEAR_WINDOW
+    required in aWndid, i
+    endparams
+
+    .include "WND:windows.def"
+
+proc
+
+    xcall w_disp(aWndid,WD_CLEAR)
+
+    xreturn
+
+endsubroutine

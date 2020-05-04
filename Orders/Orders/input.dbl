@@ -1,0 +1,262 @@
+;-----------------------------------------------------------------------------
+;;;<summary>Performs keyboard input from a Synergy Window</summary>
+;;;<param name="WindowId">ID of the winodw to perform input on</param>
+;;;<param name="Row">Window row for location of input</param>
+;;;<param name="Column">Window column for location of input</param>
+;;;<param name="Field">Field to enter data into</param>
+;;;<param name="IsRequired">Pass 1 to indicate the field is required</param>
+;;;<param name="NegativeOK">Pass 1 to indicate that negative values are ok in a numeric field</param>
+;;;<param name="IsDateField">Pass 1 to indicate that the field is a date (enter MMDDYYYY, stored as YYYYMMDD)</param>
+;
+subroutine input
+    required in             WindowId     ,n  ;Window ID for input
+    required in             Row          ,n  ;Window row to perform input on
+    required in             Column       ,n  ;Window column to perform input on
+    required out mismatch   Field        ,n  ;Field to return the input into
+    optional in             IsRequired   ,n  ;Null entry is not allowed
+    optional in             NegativeOK   ,n  ;Allow negative numbers in numerics
+    optional in             IsDateField  ,n  ;Do date validation & display
+    endparams
+
+    .include "WND:windows.def"
+
+    record
+        len         ,i4     ;Length of valid entry
+        temp_i      ,i8     ;Integer work variable
+        temp_a      ,a80    ;Temporary input buffer
+        temp_id     ,d28.10 ;Implied decimal work variable
+        temp_d      ,d18    ;Decimal work variable
+        spaces      ,a80
+        temp_date   ,d8
+          temp_year   ,d4 @temp_date
+          temp_month  ,d2 @temp_date+4
+          temp_day    ,d2 @temp_date+6
+        jp          ,i4
+        tmpchar     ,a1
+        pending     ,i4
+    endrecord
+
+proc
+
+    ;Do input, depending on the data-type of the argument we were passed
+
+    using ^datatype(4) select
+    (D_TYPE_A),
+        call AlphaInput
+    (D_TYPE_D),
+        call DecimalInput
+    (D_TYPE_ID),
+        call ImpliedInput
+    (D_TYPE_I),
+        call IntegerInput
+    endusing
+
+    xreturn
+
+AlphaInput,
+
+    repeat
+    begin
+        len=^size(Field)
+
+        xcall w_disp(WindowId,
+        &            WD_POS,Row,Column,
+        &            WD_READS,temp_a(1:len))
+
+        ;Required field validation
+        if (^passed(IsRequired)&&(temp_a(1:len).eqs.""))
+            nextloop
+
+        ^a(Field)=temp_a
+
+        exitloop
+    end
+
+    return
+
+DecimalInput,
+
+    repeat
+    begin
+        len=(^size(Field))
+
+        if (^passed(NegativeOK))
+            incr len
+
+        xcall w_disp(WindowId,
+        &            WD_POS,Row,Column,
+        &            spaces(1:len),
+        &            WD_POS,Row,Column,
+        &            WD_READS,temp_a(1:len))
+
+        ;Valid decimal digits validation
+        onerror ($ERR_DIGIT) ivd
+        temp_d=temp_a(1:len)
+        offerror
+
+        if (false)
+        begin
+ivd,        offerror
+            nextloop
+        end
+
+        ;Required field validation
+        if (^passed(IsRequired)&&(temp_a(1:len).eqs.""))
+            nextloop
+
+        ;Negative allowed validation
+        if (!^passed(NegativeOK)&&(temp_d<0))
+            nextloop
+
+        ;Date processing
+        if (^size(Field)==8)&&(^passed(IsDateField))
+        begin
+            ;;If we don't have a date, default to today
+            if (!temp_d)
+            begin
+                ^a(temp_date) = %datetime
+                temp_d = ^a(temp_date(5:4)) + ^a(temp_date(1:4))
+            end
+
+            ;;Assume the entered data is good and prepare it for display
+            temp_a(1:10)=temp_d,"XX/XX/XXXX"
+
+            ;;Get the date into YYYYMMDD format
+            temp_month=temp_d(11:2)
+            temp_day=temp_d(13:2)
+            temp_year=temp_d(15:4)
+
+            ;Check it's a valid date
+            begin
+                onerror ($ERR_INVDATE) ivdate
+                jp = %jperiod(temp_date)
+                offerror
+                exit
+ivdate,         ;Bad date!
+                offerror
+                ;Display error message
+                xcall w_disp(WindowId,
+                &            WD_POS,Row,Column,
+                &            "Invalid date!",
+                &            WD_ACCEPT,tmpchar,
+                &            WD_POS,Row,Column,
+                &            "              ")
+                ;Discard additional characters in the input buffer
+                do
+                begin
+                    xcall ttsts(pending)
+                    if (pending)
+                    begin
+                        xcall w_disp(WindowId,
+                        &               WD_POS,Row,Column,
+                        &               WD_ACCEPT,tmpchar)
+                    end
+                end
+                until (.not.pending)
+                ;Go back for another
+                nextloop
+            end
+
+            ;Reverse the date for storage
+            temp_d=temp_date
+
+            ;Display the formatted date
+            xcall w_disp(WindowId,
+            &            WD_POS,Row,Column,
+            &            temp_a(1:10))
+        end
+
+        ^a(Field)=temp_d,"XXXXXXXXXXXXXXXXXX"
+        exitloop
+    end
+
+    return
+
+ImpliedInput,
+
+    repeat
+    begin
+        len=(^size(Field)+1)
+
+        if (^passed(NegativeOK))
+            incr len
+
+        xcall w_disp(WindowId,
+        &            WD_POS,Row,Column,
+        &            spaces(1:len),
+        &            WD_POS,Row,Column,
+        &            WD_READS,temp_a(1:len))
+
+        ;Valid implied-decimal digits validation
+        onerror ($ERR_DIGIT) ivid
+        temp_id=temp_a(1:len)
+        offerror
+
+        if (false)
+        begin
+ivid,       offerror
+            nextloop
+        end
+
+        ;Required field validation
+        if (^passed(IsRequired)&&(temp_a(1:len).eqs.""))
+            nextloop
+
+        ;Negative allowed validation
+        if ((!^passed(NegativeOK))&&(temp_id<0))
+            nextloop
+
+        ^argn(4)=temp_id
+        exitloop
+    end
+
+    return
+
+IntegerInput,
+
+    repeat
+    begin
+        case ^size(Field) of
+        begincase
+          1: len=3
+          2: len=5
+          4: len=10
+          8: len=19
+        endcase
+
+        if ^passed(NegativeOK)
+            incr len
+
+        xcall w_disp(WindowId,
+        &            WD_POS,Row,Column,
+        &            spaces(1:len),
+        &            WD_POS,Row,Column,
+        &            WD_READS,temp_a(1:len))
+
+        ;Valid integer digits validation
+        onerror ($ERR_DIGIT) ivi
+        temp_i=temp_a(1:len)
+        offerror
+        if %false
+        begin
+ivi,        offerror
+            nextloop
+        end
+
+        ;Required field validation
+        if (^passed(IsRequired)&&(temp_a(1:len).eqs.""))
+            nextloop
+
+        ;Negative allowed validation
+        if (!^passed(NegativeOK)&&(temp_i<0))
+            nextloop
+
+        ^argn(4)=temp_i
+
+        exitloop
+    end
+
+    return
+
+endsubroutine
+
