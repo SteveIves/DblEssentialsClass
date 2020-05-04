@@ -24,7 +24,6 @@ main Orders
 
         tt,             i4
         achr,           a1
-        msgwin,         i4
 
     endrecord
 
@@ -74,27 +73,10 @@ shutdown,
 ;
 process,
 
-    ;Create a new window.
-    xcall w_proc(WP_CREATE,msgwin,"MESSAGE",3,30)
-
-    ;Give the window a title of “Message” and specify that the title is displayed
-    ;in the center of the top border.
-    xcall w_brdr(msgwin,
-    &   WB_ON,
-    &   WB_TPOS,WBT_TOP,WBT_CENTER,
-    &   WB_TITLE,"Message")
-
-    ;Display some text into the window.
-    xcall w_disp(msgwin,WD_POS,2,2,"Welcome to my Synergy app!")
-
-    ;Place the window onto the screen.
-    xcall w_proc(WP_PLACE,msgwin,10,25)
-
-    ;Allow the user to acknowledge the message by waiting for a key to be pressed.
-    xcall w_disp(msgwin,WD_ACCEPT,achr)
-
-    ;Delete the window.
-    xcall w_proc(WP_DELETE,msgwin)
+    xcall DISPLAY_MESSAGE("Hello world!")
+    xcall DISPLAY_MESSAGE("Hello world! Second call!")
+    xcall DISPLAY_MESSAGE("Hello world! This is the third call!")
+    xcall DISPLAY_MESSAGE("Hello world! fourth call!")
 
     return
 

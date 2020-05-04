@@ -1,0 +1,44 @@
+
+;;; <summary>
+;;; Displays a message in a temporary popup window and waits for the user to press a key.
+;;; </summary>
+;;; <param name="aMessage">The text of the message to display</param>
+subroutine DISPLAY_MESSAGE
+    required in aMessage, a
+    endparams
+
+    .include "WND:windows.def"
+
+    record
+        width,  i4
+        col,    i4
+        msgwin, i4
+        achr,   a1
+        tmpchr, a1
+    endrecord
+
+proc
+    width = %trim(aMessage) + 2
+    col = (80 - width) / 2
+
+    ;Create and place a new window.
+    xcall w_proc(WP_CREATE,msgwin,"MESSAGE",3,width,
+    &            WP_PLACE,msgwin,10,col)
+
+    ;Give the window a title of “Message” and specify that the title is displayed
+    ;in the center of the top border.
+    xcall w_brdr(msgwin,WB_ON,WB_TPOS,WBT_TOP,WBT_CENTER,WB_TITLE,"Message")
+
+    ;Display some text into the window and allow the user to acknowledge the message by waiting for a key to be pressed..
+    xcall w_disp(msgwin,WD_POS,2,2,aMessage,WD_ACCEPT,achr)
+
+    ;Ensure there are no additional characters in the keyboard buffer.
+    while %ttsts
+        xcall w_disp(msgwin,WD_ACCEPT,tmpchr)
+
+    ;Delete the window.
+    xcall w_proc(WP_DELETE,msgwin)
+
+    xreturn
+
+endsubroutine
