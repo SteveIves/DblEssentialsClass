@@ -74,9 +74,6 @@ shutdown,
 process,
 
     xcall DISPLAY_MESSAGE("Hello world!")
-    xcall DISPLAY_MESSAGE("Hello world! Second call!")
-    xcall DISPLAY_MESSAGE("Hello world! This is the third call!")
-    xcall DISPLAY_MESSAGE("Hello world! fourth call!")
 
     return
 

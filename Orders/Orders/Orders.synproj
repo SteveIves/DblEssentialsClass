@@ -82,6 +82,7 @@
     <OutputPath>bin\linux64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CreateWindow.dbl" />
     <Compile Include="DisplayMessage.dbl" />
     <Compile Include="Orders.dbl" />
   </ItemGroup>
