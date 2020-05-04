@@ -1,4 +1,8 @@
 
+;;; <summary>
+;;; Clears the entire window
+;;; </summary>
+;;; <param name="aWndid">Window ID of window to be cleared</param>
 subroutine CLEAR_WINDOW
     required in aWndid, i
     endparams

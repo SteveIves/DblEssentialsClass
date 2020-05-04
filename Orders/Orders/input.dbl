@@ -7,7 +7,6 @@
 ;;;<param name="IsRequired">Pass 1 to indicate the field is required</param>
 ;;;<param name="NegativeOK">Pass 1 to indicate that negative values are ok in a numeric field</param>
 ;;;<param name="IsDateField">Pass 1 to indicate that the field is a date (enter MMDDYYYY, stored as YYYYMMDD)</param>
-;
 subroutine input
     required in             WindowId     ,n  ;Window ID for input
     required in             Row          ,n  ;Window row to perform input on

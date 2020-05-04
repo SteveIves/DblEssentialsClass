@@ -8,6 +8,7 @@
 ;;; <param name="aRow">Row position on the window.</param>
 ;;; <param name="aCol">Column position on the window.</param>
 ;;; <param name="aChar">Returned key pressed.</param>
+
 subroutine WAIT_KEY
     required in  aWndid,    i
     required in  aRow,      n

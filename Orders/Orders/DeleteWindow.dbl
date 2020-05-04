@@ -1,4 +1,8 @@
 
+;;; <summary>
+;;; Deletes a window
+;;; </summary>
+;;; <param name="aWndid">Window ID of window to be deleted.</param>
 subroutine DELETE_WINDOW
     required in aWndid, i
     endparams
