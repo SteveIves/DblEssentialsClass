@@ -7,7 +7,7 @@ structure strDetail
     od_unit_price,  d8.2    ;Unit price
 endstructure
 
-record
-    detail,         strDetail
-endrecord
+;record
+;    detail,         strDetail
+;endrecord
 

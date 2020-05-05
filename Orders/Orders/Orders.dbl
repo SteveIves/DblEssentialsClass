@@ -22,10 +22,15 @@ main Orders
             endgroup
         endgroup
 
-        tt,             i4
-        achr,           a1
-        mnuWinId,       i4
-        orderWinId,     i4
+        tt,             i4          ;Terminal channel
+        achr,           a1          ;A character
+        mnuWinId,       i4          ;Menu window ID
+        orderWinId,     i4          ;Order window ID
+        detailWinId,    i4          ;Order item window ID
+
+        mh,             D_HANDLE    ;Dynamic memory handle
+        ms,             i4          ;Memory size in records
+        mc,             i4          ;Memory counter (used) in records
 
     endrecord
 
@@ -132,10 +137,79 @@ order_header,
         xcall input(orderWinId,6,20,header.oh_contact,true)
         xcall input(orderWinId,7,20,header.oh_salesrep,true)
 
+        ;Allocate dynamic memory for order items
+
+        if (!mh) then
+        begin
+            mh = %mem_proc(DM_ALLOC,^size(strDetail)*(ms=3))
+        end
+        else
+        begin
+            if (ms>3)
+                mh = %mem_proc(DM_RESIZ,^size(strDetail)*(ms=3),mh)
+        end
+
+        ;Go process items for the new order
+
+        call order_detail
+
+        ;Saving the order to the order data files
+
+        xcall DISPLAY_MESSAGE("Save the details to data files")
+
         xcall CLEAR_BOX(orderWinId,4,20,7,55)
     end
 
     xcall DELETE_WINDOW(orderWinId)
+    
+    ;Deallocate dynamic memory
+    mh = %mem_proc(DM_FREE,mh)
+
+    return
+
+;----------------------------------------------------------------
+; Code to add items to a new order
+;
+order_detail,
+
+    xcall CREATE_WINDOW(detailWinId,"DETAIL",10,55,10,15,"Order Details")
+    
+    xcall DISPLAY_TEXT(detailWinId,4,2,"Part number")
+    xcall DISPLAY_TEXT(detailWinId,6,2,"Quantity")
+    xcall DISPLAY_TEXT(detailWinId,8,2,"Unit price")
+
+    mc = 0
+
+    repeat
+    begin
+        ;;New line item
+        if ((mc+=1)>ms)
+        begin
+            ;;Resize dynamic memory
+            mh = %mem_proc(DM_RESIZ,^size(strDetail)*(ms+=3),mh)
+        end
+
+        xcall DISPLAY_TEXT(detailWinId,2,2,"Entering item " + %string(mc) + " of " + %string(ms))
+
+        ^m(strDetail[mc].od_number,mh) = header.oh_number
+        ^m(strDetail[mc].od_item,mh) = mc
+
+        xcall input(detailWinId,4,15,^m(strDetail[mc].od_part,mh))
+
+        if (!^m(strDetail[mc].od_part,mh))
+        begin
+            mc-=1
+            exitloop
+        end
+
+        xcall input(detailWinId,6,15,^m(strDetail[mc].od_qty,mh),true)
+        xcall input(detailWinId,8,15,^m(strDetail[mc].od_unit_price,mh),true)
+
+        xcall CLEAR_BOX(detailWinId,4,15,8,55)
+
+    end
+
+    xcall DELETE_WINDOW(detailWinId)
 
     return
 
