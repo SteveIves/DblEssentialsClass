@@ -3,19 +3,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Configuration)' == '' ">x86</Platform>
-    <Name>Orders</Name>
-    <StartupObject>&lt;Synergy Main&gt;</StartupObject>
-    <OutputName>Orders</OutputName>
-    <ProjectGuid>{58660e0d-8965-45dd-a7ea-cac0e0572198}</ProjectGuid>
+    <Name>SubsELB</Name>
+    <StartupObject>
+    </StartupObject>
+    <OutputName>SubsELB</OutputName>
+    <ProjectGuid>{74046642-3657-4e5e-9c49-054ab3991b95}</ProjectGuid>
     <ProjectTypeGuids>{7B8CF543-378A-4EC1-BB1B-98E4DC6E6820};{BBD0F5D1-1CC4-42fd-BA4C-A96779C64378}</ProjectTypeGuids>
-    <OutputType>application</OutputType>
+    <OutputType>elb</OutputType>
     <DBL_qTrim>True</DBL_qTrim>
     <DBL_qAlign>True</DBL_qAlign>
     <EnableCommonProperties>True</EnableCommonProperties>
     <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
-    <RootNamespace>Orders</RootNamespace>
-    <ProjEnvVars>
-    </ProjEnvVars>
+    <RootNamespace>SubsELB</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -24,14 +23,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|linux32' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
-    <PlatformTarget>linux32</PlatformTarget>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <DebugOptimize>Debug</DebugOptimize>
-    <OutputPath>bin\linux32\Debug\</OutputPath>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -40,14 +32,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|linux64' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
-    <PlatformTarget>linux64</PlatformTarget>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <DebugOptimize>Debug</DebugOptimize>
-    <OutputPath>bin\linux64\Debug\</OutputPath>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -56,14 +41,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|linux32' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
-    <PlatformTarget>linux32</PlatformTarget>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <DebugOptimize>Optimize</DebugOptimize>
-    <OutputPath>bin\linux32\Release\</OutputPath>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -72,33 +50,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|linux64' ">
-    <IncludeDebugInformation>False</IncludeDebugInformation>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
-    <PlatformTarget>linux64</PlatformTarget>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <DebugOptimize>Optimize</DebugOptimize>
-    <OutputPath>bin\linux64\Release\</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Orders.dbl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="detail.def">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="header.def">
-      <SubType>Content</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SubsELB\SubsELB.synproj">
-      <Name>SubsELB</Name>
-      <Project>{74046642-3657-4e5e-9c49-054ab3991b95}</Project>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>
     <PreBuildEvent>
@@ -106,4 +59,33 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\SubsOLB\ClearBox.dbl">
+      <Link>ClearBox.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\ClearWindow.dbl">
+      <Link>ClearWindow.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\CreateWindow.dbl">
+      <Link>CreateWindow.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\DeleteWindow.dbl">
+      <Link>DeleteWindow.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\DisplayMessage.dbl">
+      <Link>DisplayMessage.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\DisplayText.dbl">
+      <Link>DisplayText.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\file_access.dbl">
+      <Link>file_access.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\input.dbl">
+      <Link>input.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\WaitKey.dbl">
+      <Link>WaitKey.dbl</Link>
+    </Compile>
+  </ItemGroup>
 </Project>
