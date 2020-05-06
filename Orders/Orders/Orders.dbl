@@ -23,6 +23,9 @@ main Orders
         endgroup
 
         tt,             i4          ;Terminal channel
+        hchn,           i4          ;Order header file channel
+        dchn,           i4          ;Order detail file channel
+
         achr,           a1          ;A character
         mnuWinId,       i4          ;Menu window ID
         orderWinId,     i4          ;Order window ID
@@ -59,12 +62,31 @@ startup,
     xcall w_caption(WC_SET,"My First Synergy Application")
 .endc
 
+    ;Open the order header file
+    repeat
+    begin
+        open(hchn=0,u:i,"DAT:header.ism") [$ERR_FNF=hnf]
+        exitloop
+hnf,    xcall isamc("DAT:header.ism",^size(header),1,"start=1,length=6,nodups,nomodify")
+    end
+
+    ;Open the order detail file
+    repeat
+    begin
+        open(dchn=0,u:i,"DAT:detail.ism") [$ERR_FNF=dnf]
+        exitloop
+dnf,    xcall isamc("DAT:detail.ism",^size(strDetail),1,"start=1:7,length=6:4,nodups,nomodify")
+    end
+
     return
 
 ;----------------------------------------------------------------
 ; Code to clean up and shut down the environment
 ;
 shutdown,
+
+    ;Close the data files
+    close hchn,dchn
 
     xcall w_exit
 
@@ -98,7 +120,7 @@ process,
         ("A"),
             call order_header
         ("V"),
-            xcall DISPLAY_MESSAGE("You selected option V")
+            call order_view
         ("E"),
             exitloop
         (),
@@ -132,6 +154,13 @@ order_header,
         if (!header.oh_number)
             exitloop
 
+        ;Make sure this order does not already exist!
+        if (%file_access(FileOp.Find,hchn,,header.oh_number) == FileResult.OK)
+        begin
+            xcall DISPLAY_MESSAGE("That order already exists!")
+            nextloop
+        end
+
         xcall input(orderWinId,4,20,header.oh_customer,true)
         xcall input(orderWinId,5,20,header.oh_date,,,true)
         xcall input(orderWinId,6,20,header.oh_contact,true)
@@ -155,15 +184,46 @@ order_header,
 
         ;Saving the order to the order data files
 
-        xcall DISPLAY_MESSAGE("Save the details to data files")
+        if (!mc) then
+        begin
+            xcall DISPLAY_MESSAGE("No items entered, order not being saved!")
+        end
+        else
+        begin
+            ;First store the header record
+            if (%file_access(FileOp.Create,hchn,header) != FileResult.OK) then
+            begin
+                xcall DISPLAY_MESSAGE("Failed to save order header, order not saved!")
+            end
+            else
+            begin
+                ;Save the order detail records
+                data count, i4
+                data errors, i4, 0
+                for count from 1 thru mc
+                begin
+                    if (%file_access(FileOp.Create,dchn,^m(strDetail[count],mh)) != FileResult.OK)
+                    begin
+                        errors += 1
+                    end
+                    if (errors)
+                    begin
+                        xcall DISPLAY_MESSAGE("Failed to save " + %string(errors) + " order detail records!")
+                    end
+                end
+            end
+        end
 
         xcall CLEAR_BOX(orderWinId,4,20,7,55)
     end
 
     xcall DELETE_WINDOW(orderWinId)
     
-    ;Deallocate dynamic memory
-    mh = %mem_proc(DM_FREE,mh)
+    ;Deallocate dynamic memory, if any
+    if (mh)
+    begin
+        mh = %mem_proc(DM_FREE,mh)
+    end
 
     return
 
@@ -207,6 +267,91 @@ order_detail,
 
         xcall CLEAR_BOX(detailWinId,4,15,8,55)
 
+    end
+
+    xcall DELETE_WINDOW(detailWinId)
+
+    return
+
+;----------------------------------------------------------------
+; Code to view an order
+;
+order_view,
+
+    xcall CREATE_WINDOW(orderWinId,"ORDER",8,55,3,12,"View Order")
+
+    xcall DISPLAY_TEXT(orderWinId,2,2,"Order number")
+    xcall DISPLAY_TEXT(orderWinId,4,2,"Customer account")
+    xcall DISPLAY_TEXT(orderWinId,5,2,"Date of order")
+    xcall DISPLAY_TEXT(orderWinId,6,2,"Placed by")
+    xcall DISPLAY_TEXT(orderWinId,7,2,"Sales rep number")
+
+    repeat
+    begin
+        xcall input(orderWinId,2,20,header.oh_number)
+
+        ;Did the user just hit enter (to exit)?
+        if (!header.oh_number)
+            exitloop
+
+        ;Read the order
+        if (%file_access(FileOp.Read,hchn,header,header.oh_number) != FileResult.OK)
+        begin
+            xcall DISPLAY_MESSAGE("That order does not exist!")
+            nextloop
+        end
+
+        xcall DISPLAY_TEXT(orderWinId,4,20,header.oh_customer)
+        xcall DISPLAY_TEXT(orderWinId,5,20,%string(header.oh_date,"YYYY/MM/DD"))
+        xcall DISPLAY_TEXT(orderWinId,6,20,header.oh_contact)
+        xcall DISPLAY_TEXT(orderWinId,7,20,%string(header.oh_salesrep))
+
+        ;Go view items for the new order
+        call view_order_detail
+
+        xcall CLEAR_BOX(orderWinId,4,20,7,55)
+    end
+
+    xcall DELETE_WINDOW(orderWinId)
+    
+    return
+
+;----------------------------------------------------------------
+; Code to add items to a new order
+;
+view_order_detail,
+
+    xcall CREATE_WINDOW(detailWinId,"DETAIL",11,55,12,12,"View Order Items")
+    
+    xcall DISPLAY_TEXT(detailWinId,2,2,"Item number")
+    xcall DISPLAY_TEXT(detailWinId,4,2,"Part number")
+    xcall DISPLAY_TEXT(detailWinId,5,2,"Quantity")
+    xcall DISPLAY_TEXT(detailWinId,6,2,"Unit price")
+
+    ;Position to the first item for the order
+    if (%file_access(FileOp.Find,dchn,,header.oh_number) != FileResult.OK) then
+    begin
+        xcall DISPLAY_MESSAGE("No items found!")
+    end
+    else
+    begin
+        repeat
+        begin
+            if (%file_access(FileOp.ReadNext,dchn,detail)==FileResult.EndOfFile || detail.od_number != header.oh_number)
+            begin
+                exitloop
+            end
+
+            xcall DISPLAY_TEXT(detailWinId,2,15,%string(detail.od_item))
+            xcall DISPLAY_TEXT(detailWinId,4,15,detail.od_part)
+            xcall DISPLAY_TEXT(detailWinId,5,15,%string(detail.od_qty))
+            xcall DISPLAY_TEXT(detailWinId,6,15,%string(detail.od_unit_price,"$$$$,$$X.XX"))
+        
+            xcall DISPLAY_TEXT(detailWinId,8,2,"Press a key to continue: ")
+            xcall WAIT_KEY(detailWinId,8,27,achr)
+
+            xcall CLEAR_BOX(detailWinId,4,15,8,55)
+        end
     end
 
     xcall DELETE_WINDOW(detailWinId)
