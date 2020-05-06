@@ -5,8 +5,8 @@
 main Orders
 
     .include "WND:windows.def"
-    .include "INC:header.def"
-    .include "INC:detail.def"
+    .include "HEADER" repository, record="header"
+    .include "DETAIL" repository, structure="strDetail"
 
     record
         group now, a
@@ -21,6 +21,8 @@ main Orders
                 second, d2
             endgroup
         endgroup
+
+        detail,         strDetail
 
         tt,             i4          ;Terminal channel
         hchn,           i4          ;Order header file channel

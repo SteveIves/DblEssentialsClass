@@ -66,7 +66,7 @@
     <OutputPath>bin\linux32\Release\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <IncludeDebugInformation>False</IncludeDebugInformation>
     <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
     <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
     <PlatformTarget>x64</PlatformTarget>
@@ -85,14 +85,11 @@
     <Compile Include="Orders.dbl" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="detail.def">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="header.def">
-      <SubType>Content</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Repository\Repository.synproj">
+      <Name>Repository</Name>
+      <Project>{8fe62f0d-4dfc-4468-9e54-9e6db09ce3de}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\SubsELB\SubsELB.synproj">
       <Name>SubsELB</Name>
       <Project>{74046642-3657-4e5e-9c49-054ab3991b95}</Project>

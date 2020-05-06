@@ -44,7 +44,7 @@
     <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <IncludeDebugInformation>False</IncludeDebugInformation>
     <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
     <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
     <PlatformTarget>x64</PlatformTarget>
