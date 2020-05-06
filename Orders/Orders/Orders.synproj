@@ -82,16 +82,7 @@
     <OutputPath>bin\linux64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ClearBox.dbl" />
-    <Compile Include="ClearWindow.dbl" />
-    <Compile Include="CreateWindow.dbl" />
-    <Compile Include="DeleteWindow.dbl" />
-    <Compile Include="DisplayMessage.dbl" />
-    <Compile Include="DisplayText.dbl" />
-    <Compile Include="file_access.dbl" />
-    <Compile Include="input.dbl" />
     <Compile Include="Orders.dbl" />
-    <Compile Include="WaitKey.dbl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="detail.def">
@@ -100,6 +91,13 @@
     <Content Include="header.def">
       <SubType>Content</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SubsOLB\SubsOLB.synproj">
+      <Name>SubsOLB</Name>
+      <Project>{8a3c6fd5-a284-4090-bf0f-deaadc72e02e}</Project>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>
