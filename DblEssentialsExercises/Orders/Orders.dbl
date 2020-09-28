@@ -20,12 +20,22 @@ main Orders
         od_unit_price,  d8.2    ;Unit price
     endstructure
 
+
     record
         detail,         strDetail
+        group now, a
+            year,           d4
+            month,          d2
+            day,            d2
+            hour,           d2
+            minute,         d2
+            second,         d2
+        endgroup
     endrecord
 
 proc
 
+    now = %datetime
 
     stop
 
