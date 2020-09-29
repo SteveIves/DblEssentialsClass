@@ -4,6 +4,8 @@
 ;;; </summary>
 main Orders
 
+    .include "WND:windows.def"
+
     record header
         oh_number,      d6      ;Order number
         oh_customer,    a8      ;Customer account code
@@ -22,6 +24,7 @@ main Orders
 
     record
         tt,             i4
+        msgwin,         i4
         detail,         strDetail
         group now, a
             year,           a4
@@ -55,8 +58,14 @@ startup,
     ;Configure the terminal environment
     xcall flags(7004020,1)
 
+    ;Initialize the Synergy Windows environment
+    xcall w_init(1,tt,5)
+
     ;Clear the screen
     display(tt,$scr_clr(SCREEN))
+
+    ;Display a title in the main application drag-bar
+    xcall w_caption(WC_SET,"Order Entry Application")
 
     return
 
@@ -65,11 +74,18 @@ startup,
     ;
 process,
 
-    display(tt,$scr_pos(10,30),"Hello World",
-    &           $scr_pos(11,30),"The date is ",month,"/",day,"/",year,
-    &           $scr_pos(13,30),"Press a key: ")
+    ;Do Hello World in a popup window
 
-    accept(tt,onechar)    
+    xcall w_proc(WP_CREATE,msgwin,"MSGWIN",3,15)
+    xcall w_proc(WP_PLACE,msgwin,10,32)
+    xcall w_brdr(msgwin,WB_ON,WB_TITLE,"Message",WB_TPOS,WBT_TOP,WBT_CENTER)
+    xcall w_disp(msgwin,WD_POS,2,2,"Hello World!")
+
+    ;Wait for the user to press a key
+    xcall w_disp(msgwin,WD_ACCEPT,onechar)
+
+    ;;Delete the popup window
+    xcall w_proc(WP_DELETE,msgwin)
 
     return
 
@@ -80,6 +96,7 @@ shutdown,
 
     ;Clear the screen and close the terminal
     display(tt,$scr_clr(SCREEN))
+    xcall w_exit
     close tt
 
     return
