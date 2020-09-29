@@ -20,7 +20,6 @@ main Orders
         od_unit_price,  d8.2    ;Unit price
     endstructure
 
-
     record
         detail,         strDetail
         group now, a
@@ -35,8 +34,24 @@ main Orders
 
 proc
 
-    now = %datetime
+    call startup
+    call process
+    call shutdown
 
     stop
+
+startup,
+
+    now = %datetime
+
+    return
+
+process,
+
+    return
+
+shutdown,
+
+    return
 
 endmain
