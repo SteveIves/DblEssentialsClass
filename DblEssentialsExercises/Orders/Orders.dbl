@@ -21,15 +21,17 @@ main Orders
     endstructure
 
     record
+        tt,             i4
         detail,         strDetail
         group now, a
-            year,           d4
-            month,          d2
-            day,            d2
-            hour,           d2
-            minute,         d2
-            second,         d2
+            year,           a4
+            month,          a2
+            day,            a2
+            hour,           a2
+            minute,         a2
+            second,         a2
         endgroup
+        onechar,            a1
     endrecord
 
 proc
@@ -40,17 +42,45 @@ proc
 
     stop
 
+    ;----------------------------------------------------------
+    ;Startup code
+    ;
 startup,
 
     now = %datetime
 
+    ;Open the terminal channel
+    open(tt=0,o,"tt:")
+
+    ;Configure the terminal environment
+    xcall flags(7004020,1)
+
+    ;Clear the screen
+    display(tt,$scr_clr(SCREEN))
+
     return
 
+    ;----------------------------------------------------------
+    ;Main processing code
+    ;
 process,
 
+    display(tt,$scr_pos(10,30),"Hello World",
+    &           $scr_pos(11,30),"The date is ",month,"/",day,"/",year,
+    &           $scr_pos(13,30),"Press a key: ")
+
+    accept(tt,onechar)    
+
     return
 
+    ;----------------------------------------------------------
+    ;Shutdown code
+    ;
 shutdown,
+
+    ;Clear the screen and close the terminal
+    display(tt,$scr_clr(SCREEN))
+    close tt
 
     return
 
