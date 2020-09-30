@@ -1,0 +1,8 @@
+
+structure strDetail
+    od_number,      d6      ;Order number
+    od_item,        d4      ;Item number
+    od_part,        a10     ;Part number
+    od_qty,         d5      ;Quantity ordered
+    od_unit_price,  d8.2    ;Unit price
+endstructure

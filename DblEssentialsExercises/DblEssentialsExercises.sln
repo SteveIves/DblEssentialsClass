@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "Orders", "Orders\Orders.synproj", "{4415BEB2-89CD-43A0-AA5F-57446D942BDF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc", "inc", "{0F13488F-A353-44E1-AF6B-67D3275948D5}"
+	ProjectSection(SolutionItems) = preProject
+		inc\detail.def = inc\detail.def
+		inc\header.def = inc\header.def
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

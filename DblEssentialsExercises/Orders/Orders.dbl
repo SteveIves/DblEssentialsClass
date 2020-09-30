@@ -5,22 +5,8 @@
 main Orders
 
     .include "WND:windows.def"
-
-    record header
-        oh_number,      d6      ;Order number
-        oh_customer,    a8      ;Customer account code
-        oh_date,        d8      ;Order date
-        oh_contact,     a20     ;Order placed by
-        oh_salesrep,    d4      ;Sales rep code
-    endrecord
-
-    structure strDetail
-        od_number,      d6      ;Order number
-        od_item,        d4      ;Item number
-        od_part,        a10     ;Part number
-        od_qty,         d5      ;Quantity ordered
-        od_unit_price,  d8.2    ;Unit price
-    endstructure
+    .include "INC:header.def"
+    .include "INC:detail.def"
 
     record
         tt,             i4
