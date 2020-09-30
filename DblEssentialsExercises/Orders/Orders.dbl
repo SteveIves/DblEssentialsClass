@@ -11,6 +11,7 @@ main Orders
     record
         tt,             i4
         menuWindow,     i4
+        orderWindow,    i4
         detail,         strDetail
         group now, a
             year,           a4
@@ -75,7 +76,7 @@ process,
 
         using menuItem select
         ("A","a"),
-            xcall display_message("You selected ADD")
+            call order_header
         ("V","v"),
             xcall display_message("You selected VIEW")
         ("E","e"),
@@ -98,6 +99,40 @@ shutdown,
     display(tt,$scr_clr(SCREEN))
     xcall w_exit
     close tt
+
+    return
+
+    ;----------------------------------------------------------
+    ;Enter a new order
+    ;
+order_header,
+    
+    ;Create a window to allow the user to type in a new order
+    xcall create_window(orderWindow,"ORDER",8,60,7,10,"Order Processing Menu")
+
+    xcall display_text(orderWindow,2,2,"Order number     :")
+    xcall display_text(orderWindow,4,2,"Customer account :")
+    xcall display_text(orderWindow,5,2,"Order date       :")
+    xcall display_text(orderWindow,6,2,"Placed by        :")
+    xcall display_text(orderWindow,7,2,"Sales rep code   :")
+
+    repeat
+    begin
+        xcall input(orderWindow,2,21,header.oh_number)
+
+        ;;Did the user enter an order number?
+        if (!header.oh_number)
+            exitloop
+
+        xcall input(orderWindow,4,21,header.oh_customer,true)
+        xcall input(orderWindow,5,21,header.oh_date,,,true)
+        xcall input(orderWindow,6,21,header.oh_contact,true)
+        xcall input(orderWindow,7,21,header.oh_salesrep,true)
+
+        xcall clear_box(orderWindow,2,21,7,60)
+    end
+
+    xcall delete_window(orderWindow)
 
     return
 

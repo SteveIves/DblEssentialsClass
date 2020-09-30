@@ -1,0 +1,21 @@
+
+subroutine clear_box
+    required in aWindowId,  i
+    required in aRowFrom,   n
+    required in aColFrom,   n
+    required in aRowTo,     n
+    required in aColTo,     n
+    endparams
+    .include "WND:windows.def"
+    record
+        row,    i4
+        spaces, a80
+    endrecord
+proc
+    for row from aRowFrom thru aRowTo
+    begin
+        xcall w_disp(aWindowId,WD_POS,row,aColFrom,spaces(1:aColTo-aColFrom))
+    end
+
+    xreturn
+endsubroutine
