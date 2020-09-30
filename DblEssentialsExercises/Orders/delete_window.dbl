@@ -1,0 +1,13 @@
+
+;;; <summary>
+;;; Delete a window
+;;; </summary>
+;;; <param name="aWindowId">Id of window to delete</param>
+subroutine delete_window
+    required in aWindowId, i
+    endparams
+    .include "WND:windows.def"
+proc
+    xcall w_proc(WP_DELETE,aWindowId)
+    xreturn
+endsubroutine

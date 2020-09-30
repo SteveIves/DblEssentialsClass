@@ -1,0 +1,20 @@
+
+;;; <summary>
+;;; Display text on a window
+;;; </summary>
+;;; <param name="aWindowId">Window ID</param>
+;;; <param name="aRow">Row to display at</param>
+;;; <param name="aCol">Col to display at</param>
+;;; <param name="aText">Text to display</param>
+subroutine display_text
+    required in aWindowId, i
+    required in aRow, n
+    required in aCol, n
+    required in aText, a
+    endparams
+    .include "WND:windows.def"
+proc
+    xcall w_disp(aWindowId,WD_POS,aRow,aCol,%atrim(aText))
+
+    xreturn
+endsubroutine

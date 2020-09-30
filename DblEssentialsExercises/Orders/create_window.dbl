@@ -1,0 +1,33 @@
+
+;;; <summary>
+;;; Creates and places a window with an optional title
+;;; </summary>
+;;; <param name="aWindowId">Returned window id (i4)</param>
+;;; <param name="aName">Name of the windows (up to 15 chars)</param>
+;;; <param name="aHeight">Height in rows</param>
+;;; <param name="aWidth">Width in columns</param>
+;;; <param name="aRow">Placement row</param>
+;;; <param name="aCol">Placement column</param>
+;;; <param name="aTitle">Optional window title</param>
+subroutine create_window
+    required out aWindowId, i
+    required in  aName,     a
+    required in  aHeight,   n
+    required in  aWidth,    n
+    required in  aRow,      n
+    required in  aCol,      n
+    optional in  aTitle,    a
+    endparams
+    .include "WND:windows.def"
+proc
+    xcall w_proc(WP_CREATE,aWindowId,aName,aHeight,aWidth)
+    xcall w_proc(WP_PLACE,aWindowId,aRow,aCol)
+    
+    if (^passed(aTitle))
+    begin
+        xcall w_brdr(aWindowId,WB_ON,WB_TITLE,aTitle,WB_TPOS,WBT_TOP,WBT_CENTER)
+    end
+
+    xreturn
+
+endsubroutine

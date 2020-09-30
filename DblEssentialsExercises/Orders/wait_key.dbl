@@ -1,0 +1,26 @@
+
+;;; <summary>
+;;; Wait for a key press at a specified position on a window and return the key pressed
+;;; </summary>
+;;; <param name="aWindowId">Window ID to use</param>
+;;; <param name="aRow">Row for key press</param>
+;;; <param name="aCol">Column for key press</param>
+;;; <param name="aKey">Returned key pressed</param>
+subroutine wait_key
+    required in aWindowId,  i
+    required in aRow,       n
+    required in aCol,       n
+    required out aKey,      a
+    endparams
+    .include "WND:windows.def"
+proc
+    ;Wait for the user to press a key
+    xcall w_disp(aWindowId,WD_POS,aRow,aCol," ",WD_MOVE,0,-1,WD_ACCEPT,aKey)
+
+    ;Ensure that the keyboard input buffer is clear (incase the user pressed a special key)
+    while (%ttsts)
+        xcall w_disp(aWindowId,WD_ACCEPT,aKey)
+
+    xreturn
+
+endsubroutine

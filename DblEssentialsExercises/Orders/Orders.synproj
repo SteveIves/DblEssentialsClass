@@ -48,8 +48,12 @@
     <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="create_window.dbl" />
+    <Compile Include="delete_window.dbl" />
     <Compile Include="display_message.dbl" />
+    <Compile Include="display_text.dbl" />
     <Compile Include="Orders.dbl" />
+    <Compile Include="wait_key.dbl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>

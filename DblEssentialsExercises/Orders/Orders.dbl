@@ -10,6 +10,7 @@ main Orders
 
     record
         tt,             i4
+        menuWindow,     i4
         detail,         strDetail
         group now, a
             year,           a4
@@ -19,6 +20,7 @@ main Orders
             minute,         a2
             second,         a2
         endgroup
+        menuItem,           a1
     endrecord
 
 proc
@@ -58,10 +60,32 @@ startup,
     ;
 process,
 
-    ;Do Hello World in a popup window
-    xcall display_message("Hello World")
-    xcall display_message("Hello World, today is Wednesday!")
-    xcall display_message("Hello!")
+    ;Create a window for the application main menu
+    xcall create_window(menuWindow,"MENU",9,21,5,30,"Order Processing Menu")
+
+    xcall display_text(menuWindow,2,2,"[A] Add an order")
+    xcall display_text(menuWindow,4,2,"[V] View an order")
+    xcall display_text(menuWindow,6,2,"[E] Exit")
+
+    xcall display_text(menuWindow,8,2,"Select an option: ")
+
+    repeat
+    begin
+        xcall wait_key(menuWindow,8,20,menuItem)
+
+        using menuItem select
+        ("A","a"),
+            xcall display_message("You selected ADD")
+        ("V","v"),
+            xcall display_message("You selected VIEW")
+        ("E","e"),
+            exitloop
+        (),
+            xcall display_message("Invalid option!")
+        endusing
+    end
+
+    xcall delete_window(menuWindow)
 
     return
 
