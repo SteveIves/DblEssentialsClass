@@ -1,0 +1,32 @@
+
+subroutine display_message
+    required in aMessage, a
+    endparams
+    .include "WND:windows.def"
+    record
+        width,      i4
+        col,        i4
+        msgwin,     i4
+        onechar,    a1
+    endrecord
+proc
+    width = %trim(aMessage) + 2
+    col = (80 - width) / 2
+
+    xcall w_proc(WP_CREATE,msgwin,"MSGWIN",3,width)
+    xcall w_proc(WP_PLACE,msgwin,10,col)
+    xcall w_brdr(msgwin,WB_ON,WB_TITLE,"Message",WB_TPOS,WBT_TOP,WBT_CENTER)
+    xcall w_disp(msgwin,WD_POS,2,2,%atrim(aMessage))
+
+    ;Wait for the user to press a key
+    xcall w_disp(msgwin,WD_ACCEPT,onechar)
+
+    ;Ensure that the keyboard input buffer is clear (incase the user pressed a special key)
+    while (%ttsts)
+        xcall w_disp(msgwin,WD_ACCEPT,onechar)
+
+    ;;Delete the popup window
+    xcall w_proc(WP_DELETE,msgwin)
+
+    xreturn
+endsubroutine

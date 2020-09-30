@@ -10,7 +10,6 @@ main Orders
 
     record
         tt,             i4
-        msgwin,         i4
         detail,         strDetail
         group now, a
             year,           a4
@@ -20,7 +19,6 @@ main Orders
             minute,         a2
             second,         a2
         endgroup
-        onechar,            a1
     endrecord
 
 proc
@@ -61,17 +59,9 @@ startup,
 process,
 
     ;Do Hello World in a popup window
-
-    xcall w_proc(WP_CREATE,msgwin,"MSGWIN",3,15)
-    xcall w_proc(WP_PLACE,msgwin,10,32)
-    xcall w_brdr(msgwin,WB_ON,WB_TITLE,"Message",WB_TPOS,WBT_TOP,WBT_CENTER)
-    xcall w_disp(msgwin,WD_POS,2,2,"Hello World!")
-
-    ;Wait for the user to press a key
-    xcall w_disp(msgwin,WD_ACCEPT,onechar)
-
-    ;;Delete the popup window
-    xcall w_proc(WP_DELETE,msgwin)
+    xcall display_message("Hello World")
+    xcall display_message("Hello World, today is Wednesday!")
+    xcall display_message("Hello!")
 
     return
 
