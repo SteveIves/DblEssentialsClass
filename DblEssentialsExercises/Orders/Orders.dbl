@@ -12,7 +12,8 @@ main Orders
         tt,             i4
         menuWindow,     i4
         orderWindow,    i4
-        detail,         strDetail
+        itemWindow,     i4
+        ;detail,         strDetail
         group now, a
             year,           a4
             month,          a2
@@ -22,6 +23,13 @@ main Orders
             second,         a2
         endgroup
         menuItem,           a1
+    endrecord
+
+    ;Dynamic memory tracking data
+    record
+        mh,             D_HANDLE    ;Dynamic memory handle
+        ms,             i4          ;Size of dynamic memory in rows
+        mc,             i4          ;Number of rows currently used
     endrecord
 
 proc
@@ -108,7 +116,7 @@ shutdown,
 order_header,
     
     ;Create a window to allow the user to type in a new order
-    xcall create_window(orderWindow,"ORDER",8,60,7,10,"Order Processing Menu")
+    xcall create_window(orderWindow,"ORDER",8,60,7,10,"Create an Order")
 
     xcall display_text(orderWindow,2,2,"Order number     :")
     xcall display_text(orderWindow,4,2,"Customer account :")
@@ -129,10 +137,67 @@ order_header,
         xcall input(orderWindow,6,21,header.oh_contact,true)
         xcall input(orderWindow,7,21,header.oh_salesrep,true)
 
+        ;Allocate dynamic memory
+        mh = %mem_proc(DM_ALLOC,^size(strDetail)*(ms=3))
+        mc = 0
+
+        ;Get the line items for the order
+        call order_detail
+
+        ;Save the order
+
+
+        ;Deallocate dynamic memory
+        mh = %mem_proc(DM_FREE,mh)
+        set ms,mc=0
+
         xcall clear_box(orderWindow,2,21,7,60)
     end
 
     xcall delete_window(orderWindow)
+
+    return
+
+    ;----------------------------------------------------------
+    ;Enter items onto a new order
+    ;
+order_detail,
+
+    ;Create a window to allow the user to type new order items
+    xcall create_window(itemWindow,"ORDERITEM",8,60,10,15,"Add Items to Order")
+
+    xcall display_text(itemWindow,2,2,"Order number : " + %string(header.oh_number,"XXXXXX"))
+    xcall display_text(itemWindow,3,2,"Item number  : ")
+
+    xcall display_text(itemWindow,5,2,"Part number  :")
+    xcall display_text(itemWindow,6,2,"Quantity     :")
+    xcall display_text(itemWindow,7,2,"Unit price   :")
+
+    repeat
+    begin
+        if ((mc+=1)>ms)
+        begin
+            mh = %mem_proc(DM_RESIZ,^size(strDetail)*(ms+=3),mh)
+        end
+
+        ^m(strDetail[mc].od_number,mh) = header.oh_number
+        ^m(strDetail[mc].od_item,mh) = mc
+
+        xcall display_text(itemWindow,3,17,%string(mc) + " of " + %string(ms))
+
+        xcall input(itemWindow,5,17,^m(strDetail[mc].od_part,mh))
+
+        ;;Did the user enter a part number?
+        if (!^m(strDetail[mc].od_part,mh))
+            exitloop
+
+        xcall input(itemWindow,6,17,^m(strDetail[mc].od_qty,mh),true)
+        xcall input(itemWindow,7,17,^m(strDetail[mc].od_unit_price,mh),true)
+
+        xcall clear_box(itemWindow,5,17,7,60)
+    end
+
+    xcall delete_window(itemWindow)
 
     return
 
