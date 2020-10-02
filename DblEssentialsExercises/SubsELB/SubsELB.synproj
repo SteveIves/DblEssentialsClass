@@ -3,17 +3,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Configuration)' == '' ">x86</Platform>
-    <Name>Orders</Name>
-    <StartupObject>&lt;Synergy Main&gt;</StartupObject>
-    <OutputName>Orders</OutputName>
-    <ProjectGuid>{4415beb2-89cd-43a0-aa5f-57446d942bdf}</ProjectGuid>
+    <Name>SubsELB</Name>
+    <StartupObject>
+    </StartupObject>
+    <OutputName>SubsELB</OutputName>
+    <ProjectGuid>{a93311eb-2b37-4766-89d6-d4bc9c73fe7c}</ProjectGuid>
     <ProjectTypeGuids>{7B8CF543-378A-4EC1-BB1B-98E4DC6E6820};{BBD0F5D1-1CC4-42fd-BA4C-A96779C64378}</ProjectTypeGuids>
-    <OutputType>application</OutputType>
+    <OutputType>elb</OutputType>
     <DBL_qTrim>True</DBL_qTrim>
     <DBL_qAlign>True</DBL_qAlign>
     <EnableCommonProperties>True</EnableCommonProperties>
     <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
-    <RootNamespace>Orders</RootNamespace>
+    <RootNamespace>SubsELB</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -22,6 +23,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -30,6 +32,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -38,6 +41,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -46,17 +50,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
+    <DBLink_ReferenceCheck>True</DBLink_ReferenceCheck>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Orders.dbl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SubsELB\SubsELB.synproj">
-      <Name>SubsELB</Name>
-      <Project>{a93311eb-2b37-4766-89d6-d4bc9c73fe7c}</Project>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>
     <PreBuildEvent>
@@ -64,4 +59,30 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\SubsOLB\clear_box.dbl">
+      <Link>clear_box.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\create_window.dbl">
+      <Link>create_window.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\delete_window.dbl">
+      <Link>delete_window.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\display_message.dbl">
+      <Link>display_message.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\display_text.dbl">
+      <Link>display_text.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\file_access.dbl">
+      <Link>file_access.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\input.dbl">
+      <Link>input.dbl</Link>
+    </Compile>
+    <Compile Include="..\SubsOLB\wait_key.dbl">
+      <Link>wait_key.dbl</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

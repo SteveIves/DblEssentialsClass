@@ -1,62 +1,47 @@
 ﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)Common.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Configuration)' == '' ">x86</Platform>
-    <Name>Orders</Name>
-    <StartupObject>&lt;Synergy Main&gt;</StartupObject>
-    <OutputName>Orders</OutputName>
-    <ProjectGuid>{4415beb2-89cd-43a0-aa5f-57446d942bdf}</ProjectGuid>
+    <Name>SubsOLB</Name>
+    <StartupObject>
+    </StartupObject>
+    <OutputName>SubsOLB</OutputName>
+    <ProjectGuid>{b7cdfe5c-ccfd-4acf-a00a-1b7f47223dd9}</ProjectGuid>
     <ProjectTypeGuids>{7B8CF543-378A-4EC1-BB1B-98E4DC6E6820};{BBD0F5D1-1CC4-42fd-BA4C-A96779C64378}</ProjectTypeGuids>
-    <OutputType>application</OutputType>
+    <OutputType>olb</OutputType>
+    <DBL_SingleCompilationUnit>false</DBL_SingleCompilationUnit>
     <DBL_qTrim>True</DBL_qTrim>
     <DBL_qAlign>True</DBL_qAlign>
-    <EnableCommonProperties>True</EnableCommonProperties>
-    <CommonPropertiesFileLocation>$(SolutionDir)Common.props</CommonPropertiesFileLocation>
-    <RootNamespace>Orders</RootNamespace>
+    <RootNamespace>SubsOLB</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
-    <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <OutputPath>bin\Debug\x86\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
-    <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <OutputPath>bin\Debug\x64\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Debug</DebugOptimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
-    <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <OutputPath>bin\Release\x86\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
-    <OutputPath>$(SolutionDir)\$(Configuration)\$(Platform)</OutputPath>
-    <UnevaluatedOutputPath>EXEDIR:</UnevaluatedOutputPath>
+    <OutputPath>bin\Release\x64\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Orders.dbl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SubsELB\SubsELB.synproj">
-      <Name>SubsELB</Name>
-      <Project>{a93311eb-2b37-4766-89d6-d4bc9c73fe7c}</Project>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>
     <PreBuildEvent>
@@ -64,4 +49,14 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="clear_box.dbl" />
+    <Compile Include="create_window.dbl" />
+    <Compile Include="delete_window.dbl" />
+    <Compile Include="display_message.dbl" />
+    <Compile Include="display_text.dbl" />
+    <Compile Include="file_access.dbl" />
+    <Compile Include="input.dbl" />
+    <Compile Include="wait_key.dbl" />
+  </ItemGroup>
 </Project>
