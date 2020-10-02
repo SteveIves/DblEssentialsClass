@@ -1,0 +1,164 @@
+
+enum FileOp
+    Read                    ;Read a specific record (READ)
+    ReadNext                ;Read the next record (READS)
+    Create                  ;Create a new record (STORE)
+    Update                  ;Update an existing record (WRITE)
+    Find                    ;Find a record (FIND)
+endenum
+
+enum FileResult
+    OK                      ;Success, no error was detected
+    RecordLocked            ;$ERR_LOCKED
+    RecordTooBig            ;$ERR_TOOBIG
+    EndOfFile               ;$ERR_EOF
+    KeyNotSame              ;$ERR_KEYNOT
+    InvalidRecordNumber     ;$ERR_RECNUM
+    InvalidRecordSize       ;$ERR_IRCSIZ
+    NoDuplicates            ;$ERR_NODUPS
+    NoCurrentRecord         ;$ERR_NOCURR
+endenum
+
+;-----------------------------------------------------------------------------
+;;;<summary>
+;;;General purpose utility routine to read and write ISAM files.
+;;;</summary>
+;;;<param name="Operation">Operation mode. Pass a member of the FileOp enumeration.</param>
+;;;<param name="Channel">Channel number of file to be accessed.</param>
+;;;<param name="DataArea">Record area containing data to be written (for Create or Update) or to contain data read (for Read or ReadNext).</param>
+;;;<param name="KeyValue">Key value to read (for Read or Find).</param>
+;;;<returns>
+;;;Returns a member of the FileResult enumeration. FileResult.OK indicates
+;;;sucessful completion, other values indicate an error condition.
+;;;</returns>
+;
+function file_access                ,FileResult
+    required in          Operation  ,FileOp     ;Mode to access file in
+    required in          Channel    ,n          ;Channel number
+    optional inout       DataArea   ,a          ;Data area
+    optional in mismatch KeyValue   ,n          ;Key
+    endparams
+
+    .include "WND:windows.def"
+
+    stack record ivars
+        status                     ,FileResult  ;Return status (0=OK)
+        tmpbuf                     ,i4          ;Temporary input buffer (handle)
+    endrecord
+
+proc
+
+    clear ^i(ivars)
+
+    using Operation select
+    (FileOp.Read),
+        call read
+    (FileOp.ReadNext),
+        call reads
+    (FileOp.Create),
+        call store
+    (FileOp.Update),
+        call write
+    (FileOp.Find),
+        call find
+    endusing
+
+    if (tmpbuf)
+        tmpbuf = %mem_proc(DM_FREE,tmpbuf)
+
+    freturn status
+
+Read,
+
+    tmpbuf = %mem_proc(DM_ALLOC+DM_BLANK,^size(DataArea))
+
+    read(Channel,^m(tmpbuf),%atrim(^a(KeyValue)))
+    &   [
+    &       $ERR_LOCKED = Locked,
+    &       $ERR_TOOBIG = TooBig,
+    &       $ERR_EOF    = Eof,
+    &       $ERR_KEYNOT = KeyNot,
+    &       $ERR_RECNUM = RecNum
+    &   ]
+
+    DataArea = ^m(tmpbuf)
+
+    return
+
+Reads,
+
+    tmpbuf = %mem_proc(DM_ALLOC+DM_BLANK,^size(DataArea))
+
+    reads(Channel,^m(tmpbuf))
+    &   [
+    &       $ERR_LOCKED = Locked,
+    &       $ERR_TOOBIG = TooBig,
+    &       $ERR_EOF    = Eof
+    &   ]
+
+    DataArea = ^m(tmpbuf)
+
+    return
+
+Store,
+    store(Channel,DataArea)
+    &   [
+    &       $ERR_IRCSIZ = IrcSiz,
+    &       $ERR_NODUPS = NoDups,
+    &       $ERR_EOF    = Eof
+    &   ]
+    return
+
+Write,
+    write(Channel,DataArea)
+    &   [
+    &       $ERR_NOCURR = NoCurr,
+    &       $ERR_KEYNOT = KeyNot
+    &   ]
+    return
+
+Find,
+    find(Channel,,%atrim(^a(KeyValue)))
+    &   [
+    &       $ERR_LOCKED = Locked,
+    &       $ERR_TOOBIG = TooBig,
+    &       $ERR_EOF    = Eof,
+    &       $ERR_KEYNOT = KeyNot,
+    &       $ERR_RECNUM = RecNum
+    &   ]
+    return
+
+Locked,
+    status=FileResult.RecordLocked
+    return
+
+TooBig,
+    status=FileResult.RecordTooBig
+    return
+
+Eof,
+    status=FileResult.EndOfFile
+    return
+
+KeyNot,
+    status=FileResult.KeyNotSame
+    return
+
+RecNum,
+    status=FileResult.InvalidRecordNumber
+    return
+
+IrcSiz,
+    status=FileResult.InvalidRecordSize
+    return
+
+NoDups,
+    status=FileResult.NoDuplicates
+    return
+
+NoCurr,
+    status=FileResult.NoCurrentRecord
+    return
+
+endfunction
+

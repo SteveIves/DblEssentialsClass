@@ -53,6 +53,7 @@
     <Compile Include="delete_window.dbl" />
     <Compile Include="display_message.dbl" />
     <Compile Include="display_text.dbl" />
+    <Compile Include="file_access.dbl" />
     <Compile Include="input.dbl" />
     <Compile Include="Orders.dbl" />
     <Compile Include="wait_key.dbl" />
